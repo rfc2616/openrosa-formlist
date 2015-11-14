@@ -132,8 +132,12 @@ function createFormList (forms, options, callback) {
       if (hasAttachments && options.manifestUrl) {
         meta.manifestUrl = options.manifestUrl.replace(URL_RE, meta.formID)
       }
-      md5.update(JSON.stringify(meta))
-      meta.hash = 'md5:' + md5.digest('hex')
+      try{
+        md5.update(JSON.stringify(meta))
+        meta.hash = 'md5:' + md5.digest('hex')
+      } catch (err) {
+        // no hashcode, I'm afraid
+      }
       callback(null, { xform: meta })
     })
 
