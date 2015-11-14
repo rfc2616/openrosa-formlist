@@ -1,4 +1,4 @@
-var expat = require('node-expat')
+var expat = require('ersatz-node-expat')
 var crypto = require('crypto')
 var request = require('request')
 var builder = require('xmlbuilder')
