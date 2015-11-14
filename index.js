@@ -19,8 +19,8 @@ var Stream = require('stream')
  */
 var defaults = {
   mediaRe: /jr\:\/\/(images|audio|video)/i,
-  namePath: '/h:html/h:head/h:title',
-  instancePath: '/h:html/h:head/model/instance',
+  namePath: '/html/head/title',
+  instancePath: '/html/head/model/instance',
   headers: {
     'User-Agent': 'xform-formlist'
   }
@@ -121,14 +121,9 @@ function createFormList (forms, options, callback) {
 
     parser.on('error', callback)
 
-    xformStream.on('data', function (d) {
-      md5.update(d)
-    })
-
     xformStream.on('error', callback)
 
     parser.on('end', function () {
-      meta.hash = 'md5:' + md5.digest('hex')
       if (options.downloadUrl) {
         meta.downloadUrl = options.downloadUrl.replace(URL_RE, meta.formID)
       } else if (xformStream.uri && xformStream.uri.href) {
@@ -137,6 +132,8 @@ function createFormList (forms, options, callback) {
       if (hasAttachments && options.manifestUrl) {
         meta.manifestUrl = options.manifestUrl.replace(URL_RE, meta.formID)
       }
+      md5.update(JSON.stringify(meta))
+      meta.hash = 'md5:' + md5.digest('hex')
       callback(null, { xform: meta })
     })
 
