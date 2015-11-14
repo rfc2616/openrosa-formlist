@@ -138,7 +138,11 @@ function createFormList (forms, options, callback) {
       } catch (err) {
         // no hashcode, I'm afraid
       }
-      callback(null, { xform: meta })
+      try {
+        callback(null, { xform: meta })
+      } catch (err) {
+        // duplicate callback call
+      }
     })
 
     if (xformStream instanceof request.Request) {
